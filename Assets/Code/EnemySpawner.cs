@@ -6,18 +6,10 @@ namespace FastHand
 {
     public class EnemySpawner : MonoBehaviour
     {
-        private enum WaveEnemies
-        {
-            First,
-            Second,
-            Third,
-            Fourth,
-            Fifth
-        }
-
-        [SerializeField] private WaveEnemies _wave = WaveEnemies.First;
+        private int _levelNumber = 1;
+        [SerializeField] private Transform[] _enemySpawners;
         [SerializeField] private int _poolCount = 3;
-        [SerializeField] private bool _autoExpand = false;
+        [SerializeField] private bool _autoExpand = true;
         [SerializeField] private Enemy _enemyPrefab;
 
         private PoolMono<Enemy> _pool;
@@ -26,32 +18,16 @@ namespace FastHand
         {
             _pool = new PoolMono<Enemy>(_enemyPrefab, _poolCount, transform);
             _pool.AutoExpand = _autoExpand;
-            
-            switch (_wave)
-            {
-                case WaveEnemies.First:
-                    CreateEnemy(3);
-                    break;                
-                case WaveEnemies.Second:
-                    CreateEnemy(6);
-                    break;                
-                case WaveEnemies.Third:
-                    CreateEnemy(8);
-                    break;                
-                case WaveEnemies.Fourth:
-                    CreateEnemy(12);
-                    break;                
-                case WaveEnemies.Fifth:
-                    CreateEnemy(15);
-                    break;
-                
-            }
-
+            CreateWave(_levelNumber);
         }
 
         private void Update()
         {
-            
+            if (_pool.HasAllFreeElement())
+            {
+                _levelNumber++;
+                CreateWave(_levelNumber);
+            }
         }
 
         private void CreateEnemy(int countEnemy)
@@ -59,7 +35,30 @@ namespace FastHand
             for (int i = 0; i < countEnemy; i++)
             {
                 var enemy = _pool.GetFreeElement();
-                enemy.transform.position = transform.position;
+                enemy.transform.position = _enemySpawners[Random.Range(0, _enemySpawners.Length - 1)].transform.position;
+            }
+        }
+
+        private void CreateWave(int levelNumber)
+        {
+            switch (levelNumber)
+            {
+                case 1:
+                    CreateEnemy(3);
+                    break;                
+                case 2:
+                    CreateEnemy(6);
+                    break;                
+                case 3:
+                    CreateEnemy(8);
+                    break;                
+                case 4:
+                    CreateEnemy(12);
+                    break;                
+                case 5:
+                    CreateEnemy(15);
+                    break;
+                
             }
         }
     }

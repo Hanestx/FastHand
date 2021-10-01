@@ -53,12 +53,23 @@ namespace FastHand
             return false;
         }
 
+        public bool HasAllFreeElement()
+        {
+            foreach (var mono in _pool)
+            {
+                if (mono.gameObject.activeInHierarchy)
+                    return false;
+            }
+
+            return true;
+        }
+
         public T GetFreeElement()
         {
             if (HasFreeElement(out var element))
                 return element;
 
-            if (AutoExpand)
+            else if (AutoExpand)
                 return CreateObject(true);
 
             throw new Exception($"There is no free elements in pool of type {typeof(T)}");
