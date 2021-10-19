@@ -35,7 +35,7 @@ namespace FastHand
             var savePlayer = new SavedData
             {
                 Position = player.transform.position,
-                Name = "Roman",
+                Name = "Hanestx",
                 IsEnabled = true
             };
             _data.Save(savePlayer, Path.Combine(_path, _fileName));
